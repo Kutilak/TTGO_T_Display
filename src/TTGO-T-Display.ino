@@ -5,6 +5,7 @@
 #include <Button2.h>
 #include "esp_adc_cal.h"
 #include "bmp.h"
+#include <driver/dac.h>
 //#include "TTGO_T_Display.h"
 
 #ifndef TFT_DISPOFF
@@ -147,18 +148,9 @@ void setup()
 
 
     tft.setSwapBytes(true);
-    tft.pushImage(0, 0,  240, 135, test1);
+    tft.pushImage(0, 0,  240, 135, ttgo);
     espDelay(200);
-    tft.pushImage(0, 0,  240, 135, test2);
-    espDelay(200);
-    tft.pushImage(0, 0,  240, 135, test3);
-    espDelay(200);
-    tft.pushImage(0, 0,  240, 135, test4);
-    espDelay(200);
-    tft.pushImage(0, 0,  240, 135, test5);
-    espDelay(200);
-    tft.pushImage(0, 0,  240, 135, test6);
-    espDelay(200);
+    
 
     tft.setRotation(0);
     // int i = 5;
@@ -191,7 +183,16 @@ void setup()
 void loop()
 {
     if (btnCick) {
-        showVoltage();
+        //showVoltage();
+        dac_output_enable(DAC_CHANNEL_1);    
+        for(double i = 0; i < 6.28; i=i+0.01)
+        {
+            int sinus = int(127+(127*sin(i)));
+            dac_output_voltage(DAC_CHANNEL_1, sinus);
+            delayMicroseconds(1);
+        }
+         
+        
     }
     button_loop();
 }
